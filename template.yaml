@@ -1,0 +1,31 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: An AWS Serverless Specification template describing your function.
+
+Resources:
+
+  rssdynamo:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: ntpfunction.handler
+      Runtime: python3.8
+      CodeUri: lambda-ntp/
+      Description: 'Get the NTP data of the Lambda runtime'
+      MemorySize: 128
+      Timeout: 10
+      Tracing: Active
+      Layers: 
+        - !Ref lambdalayer
+
+  lambdalayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: ntplayer
+      Description: python3 dependencies for ntp
+      ContentUri: lambda-layer/
+      CompatibleRuntimes:
+        - python3.8
+      LicenseInfo: 'MIT-0'
+      RetentionPolicy: Delete
+    Metadata:
+      BuildMethod: python3.8
